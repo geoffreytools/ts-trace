@@ -2,6 +2,9 @@
 
 An interactive Bash script to help [audit the performance](https://github.com/microsoft/TypeScript/wiki/Performance-Tracing) of your Typescript types.
 
+<table>
+<td valign="top" width="330">
+
 ### Features
 - Trace a specific path or list of paths;
 - Replay a specific trace;
@@ -14,6 +17,10 @@ An interactive Bash script to help [audit the performance](https://github.com/mi
 1) Run `tsc --generateTrace` with that new config as the `--project`;
 
 3) Record your input in a persistent log sorted by recency.
+</td><td>
+
+![preview](./ts-trace.gif)
+</table>
 
 ## Motivation
 
