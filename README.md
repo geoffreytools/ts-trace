@@ -5,6 +5,7 @@ An interactive Bash script to help [audit the performance](https://github.com/mi
 ### Features
 - Trace a specific path or list of paths;
 - Replay a specific trace;
+- Create snapshots;
 - Batch process multiple traces.
 
 ### What it does

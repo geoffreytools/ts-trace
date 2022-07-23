@@ -18,12 +18,14 @@ done
 
 # derived paths
 trace_dir="${out_dir}/traces"
+snapshots_dir="${out_dir}/snapshots"
 log_file="${out_dir}/log"
 trace_tsconfig="${out_dir}/tsconfig.json"
 
 # create directories
 mkdir -p $out_dir
 mkdir -p $trace_dir
+mkdir -p $snapshots_dir
 
 # global mutable
 init=true
@@ -46,6 +48,8 @@ function process_request {
     success=()
     if (is_help $input)
         then show_help; prompt_user; process_request;
+    elif (is_snapshot $input)
+        then take_snapshot;
     elif (is_wildcard $input)
         then replay_all;
     else
@@ -59,6 +63,8 @@ function process_request {
 function show_help {
     echo -e "- Enter a whitespace-separated list of paths to trace
 - Replay a trace by entering its index (\".\" to replay all)
+- Take a snapshot with \"!\"
+- Display this help with \"?\"
 - Press <CTRL+C> to exit.
 "
 }
@@ -73,6 +79,7 @@ function prompt_user {
 }
 
 function is_help { [ $1 == "?" ]; }
+function is_snapshot { [ $1 == "!" ]; }
 
 function is_wildcard { [ $1 == "." ]; }
 
@@ -177,6 +184,16 @@ function write_logfile {
     done
 
     echo -e ${str::-2} > $log_file
+}
+
+function take_snapshot {
+    count=0
+    for dir in $snapshots_dir/*; do
+        [[ -d $dir ]] && let count+=1
+    done
+    mkdir -p $snapshots_dir/$count
+    mv $trace_dir/* $snapshots_dir/$count
+    echo -n "contents of $trace_dir moved to $snapshots_dir/$count"
 }
 
 while :; do main; done
