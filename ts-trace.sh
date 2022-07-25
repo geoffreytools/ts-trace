@@ -78,14 +78,11 @@ function prompt_user {
     echo ""
 }
 
-function is_help { [ $1 == "?" ]; }
-function is_snapshot { [ $1 == "!" ]; }
-
-function is_wildcard { [ $1 == "." ]; }
-
-function is_index { [[ $1 == +([0-9]) ]]; }
-
-function is_log_empty { (( ${#logs[@]} == 0 )); }
+function is_help { [ $1 = "?" ]; }
+function is_snapshot { [ $1 = "!" ]; }
+function is_wildcard { [ $1 = "." ]; }
+function is_index { [[ $1 =~ ^[0-9]+$ ]]; }
+function is_log_empty { [ ${#logs[@]} = "0" ]; }
 
 function replay_all {
     for file in "${logs[@]}"; do
@@ -123,7 +120,7 @@ function write_trace_tsconfig {
     for file in "$@"; do
         str+="\t\t\"../$file/**/*.ts\",\n";
     done
-    str="${str::-3}\n\t]\n}"
+    str="${str::${#str}-3}\n\t]\n}"
     echo -e $str > $trace_tsconfig
 }
 
@@ -144,9 +141,8 @@ function error_handling {
 
 function read_logfile {
     if test -f $log_file; then
-        readarray -t logs < $log_file;
-    else
-        logs=();
+        IFS=$'\n' read -d '' -r -a logs < $log_file
+    else logs=()
     fi
 }
 
@@ -183,7 +179,7 @@ function write_logfile {
         done
     done
 
-    echo -e ${str::-2} > $log_file
+    echo -e ${str::${#str}-2} > $log_file
 }
 
 function take_snapshot {
