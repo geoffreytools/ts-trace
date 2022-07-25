@@ -1,6 +1,6 @@
 {
   "name": "ts-trace",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "An interactive Bash script to help audit the performance of your Typescript types.",
   "main": "ts-trace.sh",
   "repository": {
