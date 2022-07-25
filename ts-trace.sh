@@ -107,7 +107,7 @@ function trace_single {
     echo -n "[ ] tracing $@..."
     if (trace $filename); then
         success+="$@"
-        echo -e -n "\r\e[K[✓] trace written to $trace_dir/$filename"
+        echo -e -n "\r[✓] trace written to $trace_dir/$filename"
     else
         echo -e "\n[✗] bad trace written to $trace_dir/$filename"
         error_handling $filename
