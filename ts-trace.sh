@@ -83,6 +83,7 @@ function is_snapshot { [ $1 = "!" ]; }
 function is_wildcard { [ $1 = "." ]; }
 function is_index { [[ $1 =~ ^[0-9]+$ ]]; }
 function is_log_empty { [ ${#logs[@]} = "0" ]; }
+function is_not_empty { [ "$(ls -A $1)" ]; }
 
 function replay_all {
     for file in "${logs[@]}"; do
@@ -183,13 +184,17 @@ function write_logfile {
 }
 
 function take_snapshot {
-    count=0
-    for dir in $snapshots_dir/*; do
-        [[ -d $dir ]] && let count+=1
-    done
-    mkdir -p $snapshots_dir/$count
-    mv $trace_dir/* $snapshots_dir/$count
-    echo -n "contents of $trace_dir moved to $snapshots_dir/$count"
+    if (is_not_empty $trace_dir) then
+        count=0
+        for dir in $snapshots_dir/*; do
+            [[ -d $dir ]] && let count+=1
+        done
+        mkdir -p $snapshots_dir/$count
+        mv $trace_dir/* $snapshots_dir/$count
+        echo -n "[✓] contents of $trace_dir moved to $snapshots_dir/$count"
+    else
+        echo -n "[✗] no traces to move to $snapshots_dir"
+    fi
 }
 
 while :; do main; done
