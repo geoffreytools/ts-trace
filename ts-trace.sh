@@ -49,7 +49,7 @@ function process_request {
     if (is_help $input)
         then show_help; prompt_user; process_request;
     elif (is_snapshot $input)
-        then take_snapshot;
+        then take_snapshot $input;
     elif (is_wildcard $input)
         then replay_all;
     else
@@ -63,7 +63,7 @@ function process_request {
 function show_help {
     echo -e "- Enter a whitespace-separated list of paths to trace
 - Replay a trace by entering its index (\".\" to replay all)
-- Take a snapshot with \"!\"
+- Take a snapshot with \"!\" or \"!snapshot_name\"
 - Display this help with \"?\"
 - Press <CTRL+C> to exit.
 "
@@ -79,7 +79,7 @@ function prompt_user {
 }
 
 function is_help { [ $1 = "?" ]; }
-function is_snapshot { [ $1 = "!" ]; }
+function is_snapshot { [ ${1:0:1} = "!" ]; }
 function is_wildcard { [ $1 = "." ]; }
 function is_index { [[ $1 =~ ^[0-9]+$ ]]; }
 function is_log_empty { [ ${#logs[@]} = "0" ]; }
@@ -183,15 +183,20 @@ function write_logfile {
     echo -e ${str::${#str}-2} > $log_file
 }
 
+function count_snapshots {
+    count=0
+    for dir in $snapshots_dir/*; do
+        [[ -d $dir ]] && let count+=1
+    done
+    echo $count;
+}
+
 function take_snapshot {
     if (is_not_empty $trace_dir) then
-        count=0
-        for dir in $snapshots_dir/*; do
-            [[ -d $dir ]] && let count+=1
-        done
-        mkdir -p $snapshots_dir/$count
-        mv $trace_dir/* $snapshots_dir/$count
-        echo -n "[✓] contents of $trace_dir moved to $snapshots_dir/$count"
+        name=$([ "${1:1}" = "" ] && echo $(count_snapshots) || echo ${1:1})
+        mkdir -p $snapshots_dir/$name
+        mv $trace_dir/* $snapshots_dir/$name
+        echo -n "[✓] contents of $trace_dir moved to $snapshots_dir/$name"
     else
         echo -n "[✗] no traces to move to $snapshots_dir"
     fi
