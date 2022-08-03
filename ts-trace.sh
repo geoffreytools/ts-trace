@@ -70,11 +70,9 @@ function show_help {
 }
 
 function prompt_user {
-    if $init;
-        then echo -n "input: "
-        else echo -n "input (? for help): "
-    fi
-    read input
+    local prompt="input$([ $init = false ] && echo "(? for help)"): "
+    read -ep "$prompt" input
+    history -s "$input"
     echo ""
 }
 
