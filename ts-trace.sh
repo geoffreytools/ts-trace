@@ -103,7 +103,7 @@ function trace {
 
 function trace_single {
     write_trace_tsconfig $@
-    filename="$@"
+    local filename="$@"
     filename="${filename// /_}"
     echo -n "[ ] tracing $@..."
     if (trace $filename); then
@@ -116,7 +116,7 @@ function trace_single {
 }
 
 function write_trace_tsconfig {
-    str="{\n\t\"extends\": \"../$base_tsconfig\",\n"
+    local str="{\n\t\"extends\": \"../$base_tsconfig\",\n"
     str+="\t\"include\": [\n"
     for file in "$@"; do
         str+="\t\t\"../$file/**/*.ts\",\n";
@@ -126,7 +126,7 @@ function write_trace_tsconfig {
 }
 
 function error_handling {
-    exit=false
+    local exit=false
     while [[ $exit = false ]]; do
         echo -n -e "\ndelete it (y/n)? "
         read answer
@@ -150,7 +150,7 @@ function read_logfile {
 function show_logs {
     if (!(is_log_empty)); then
         echo "Previously traced paths are:"
-        i=0
+        local i=0
         for log_item in "${logs[@]}"; do
             let i+=1
             echo "$i) ${log_item}";
@@ -165,7 +165,7 @@ function write_logfile {
     fi
 
     read_logfile
-    str=""
+    local str=""
 
     for (( i=${#success[@]}-1; i>=0; i-- )); do
         str+="${success[i]}\n"
@@ -184,7 +184,7 @@ function write_logfile {
 }
 
 function count_snapshots {
-    count=0
+    local count=0
     for dir in $snapshots_dir/*; do
         [[ -d $dir ]] && let count+=1
     done
