@@ -193,8 +193,12 @@ function count_snapshots {
 
 function take_snapshot {
     if (is_not_empty $trace_dir) then
-        name=$([ "${1:1}" = "" ] && echo $(count_snapshots) || echo ${1:1})
+        local name=$([ "${1:1}" = "" ] && echo $(count_snapshots) || echo ${1:1})
         mkdir -p $snapshots_dir/$name
+        local old=($(ls $trace_dir))
+        old=("${old[@]/#/$snapshots_dir/$name/}")
+        old="${old[@]/%//*}"
+        rm -rf $old
         mv $trace_dir/* $snapshots_dir/$name
         echo -n "[✓] contents of $trace_dir moved to $snapshots_dir/$name"
     else
