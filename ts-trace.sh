@@ -193,10 +193,7 @@ function take_snapshot {
     if (is_not_empty $trace_dir) then
         local name=$([ "${1:1}" = "" ] && echo $(count_snapshots) || echo ${1:1})
         mkdir -p $snapshots_dir/$name
-        local old=($(ls $trace_dir))
-        old=("${old[@]/#/$snapshots_dir/$name/}")
-        old="${old[@]/%//*}"
-        rm -rf $old
+        rm -rf $(ls $trace_dir | sed -E "s,(.*),$snapshots_dir/$name/\1/*,")
         mv $trace_dir/* $snapshots_dir/$name
         echo -n "[✓] contents of $trace_dir moved to $snapshots_dir/$name"
     else
