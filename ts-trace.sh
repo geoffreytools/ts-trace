@@ -6,13 +6,13 @@ out_dir="./ts-trace"
 
 # override paths
 while getopts "i:o:" option; do
-   case $option in
-      i) # override $base_tsconfig
-         base_tsconfig=${OPTARG};;
+    case $option in
+        i) # override $base_tsconfig
+            base_tsconfig=${OPTARG};;
         o) # overrid $out_dir
-         out_dir=${OPTARG};;
-     \?) # Invalid option
-         echo "Valid options are -i and -o";;
+            out_dir=${OPTARG};;
+        \?) # Invalid option
+            echo "Valid options are -i and -o";;
    esac
 done
 
