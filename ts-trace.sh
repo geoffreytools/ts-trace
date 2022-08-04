@@ -12,7 +12,7 @@ while getopts "i:o:" option; do
         o) # overrid $out_dir
          out_dir=${OPTARG};;
      \?) # Invalid option
-         echo "Valid options are -extend and -out";;
+         echo "Valid options are -i and -o";;
    esac
 done
 
