@@ -117,7 +117,11 @@ function write_trace_tsconfig {
     local str="{\n\t\"extends\": \"../$base_tsconfig\",\n"
     str+="\t\"include\": [\n"
     for file in "$@"; do
-        str+="\t\t\"../$file/**/*.ts\",\n";
+        if [[ $file == *.ts ]];
+            then str+="\t\t\"../$file\",\n"
+        else
+            str+="\t\t\"../$file/**/*.ts\",\n"
+        fi
     done
     str="${str::${#str}-3}\n\t]\n}"
     echo -e $str > $trace_tsconfig
