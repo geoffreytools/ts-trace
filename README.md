@@ -9,7 +9,8 @@ An interactive Bash script to help [audit the performance](https://github.com/mi
 - Trace a specific path or list of paths;
 - Replay a specific trace;
 - Create snapshots;
-- Batch process multiple traces.
+- Batch process multiple traces;
+- Trace once and exit, for scripts.
 
 ### What it does
 1) Extend a base `tsconfig.json` and override the `include` field with the list of paths you supply;
@@ -59,4 +60,10 @@ For example
 "scripts": {
     "trace": "bash ./node_modules/ts-trace/ts-trace.sh -i ./src/tsconfig.json -o ./profiling"
 }
+```
+
+The option `-c` traces once and exits, which suits scripts and tools that cannot answer a prompt. The arguments after the options are the paths to trace, as one trace. They are recorded in the log, as in the interactive mode, and the exit status is the one of `tsc`:
+
+```
+bash ./node_modules/ts-trace/ts-trace.sh -c src/models src/store.ts
 ```

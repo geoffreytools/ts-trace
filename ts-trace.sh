@@ -4,17 +4,22 @@
 base_tsconfig="./tsconfig.json"
 out_dir="./ts-trace"
 
+ci=false
+
 # override paths
-while getopts "i:o:" option; do
+while getopts "i:o:c" option; do
     case $option in
         i) # override $base_tsconfig
             base_tsconfig=${OPTARG};;
         o) # overrid $out_dir
             out_dir=${OPTARG};;
+        c) # trace the remaining arguments once and exit
+            ci=true;;
         \?) # Invalid option
-            echo "Valid options are -i and -o";;
+            echo "Valid options are -i, -o and -c";;
    esac
 done
+shift $((OPTIND - 1))
 
 # derived paths
 trace_dir="${out_dir}/traces"
@@ -109,6 +114,7 @@ function trace_single {
         echo -e -n "\r[✓] trace written to $trace_dir/$filename"
     else
         echo -e "\n[✗] bad trace written to $trace_dir/$filename"
+        if $ci; then return 1; fi
         error_handling $filename
     fi
 }
@@ -204,5 +210,14 @@ function take_snapshot {
         echo -n "[✗] no traces to move to $snapshots_dir"
     fi
 }
+
+if $ci; then
+    if [ $# -eq 0 ]; then echo "-c expects the paths to trace" >&2; exit 2; fi
+    trace_single "$@"
+    status=$?
+    write_logfile
+    echo ""
+    exit $status
+fi
 
 while :; do main; done
