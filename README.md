@@ -42,10 +42,10 @@ If you are on Windows I imagine you have [Git Bash](https://github.com/git-for-w
 npm install github:geoffreytools/ts-trace
 ```
 
-Add it to your npm-scripts in `package.json`:
+Run it with `npx ts-trace`, or add it to your npm-scripts in `package.json`:
 ```json
 "scripts": {
-    "trace": "bash ./node_modules/ts-trace/ts-trace.sh"
+    "trace": "ts-trace"
 }
 ```
 
@@ -58,12 +58,12 @@ You can override the location of:
 For example
 ```json
 "scripts": {
-    "trace": "bash ./node_modules/ts-trace/ts-trace.sh -i ./src/tsconfig.json -o ./profiling"
+    "trace": "ts-trace -i ./src/tsconfig.json -o ./profiling"
 }
 ```
 
 The option `-c` traces once and exits, which suits scripts and tools that cannot answer a prompt. The arguments after the options are the paths to trace, as one trace. They are recorded in the log, as in the interactive mode, and the exit status is the one of `tsc`:
 
 ```
-bash ./node_modules/ts-trace/ts-trace.sh -c src/models src/store.ts
+npx ts-trace -c src/models src/store.ts
 ```
